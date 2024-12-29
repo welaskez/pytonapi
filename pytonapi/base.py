@@ -1,8 +1,10 @@
 import asyncio
 import json
+from ssl import create_default_context
 from typing import Any, Dict, Optional, AsyncGenerator
 
 import aiohttp
+import certifi
 
 from pytonapi.exceptions import (
     TONAPIBadRequestError,
@@ -252,6 +254,7 @@ class AsyncTonapiClientBase:
                             headers=headers,
                             params=params,
                             json=body,
+                            ssl=create_default_context(cafile=certifi.where())
                     ) as response:
                         await self.__raise_for_status(response)
                         return await self.__read_content(response)
